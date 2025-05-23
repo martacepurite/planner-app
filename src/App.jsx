@@ -1,5 +1,12 @@
 import { useState } from "react";
+import axios from "axios";
 
+const apiCall = () => {
+  axios.get('http://localhost:3000').then((data) => {
+    //this console.log will be in our frontend console
+    console.log(data)
+  })
+}
 function App() {
   const [index, setIndex] = useState(2);
   const [tasks, setTasks] = useState([
@@ -14,7 +21,7 @@ function App() {
 
   const [newTask, setNewTask] = useState("");
   const [newTaskDue, setNewTaskDue] = useState("01.01.2028");
-  const [newTaskPriority, setNewTaskPriority] = useState("");
+  const [newTaskPriority, setNewTaskPriority] = useState("Low");
   const [isEditingID, setIsEditingID] = useState();
   const [editTitle, setEditTitle] = useState("");
 
@@ -140,54 +147,62 @@ function App() {
           {task.id === isEditingID && (
             <div className="flex grow">
               <input
-                className="flex grow ml-4 mt-1 border-b-1 "
+                className="flex grow ml-4  border-b-1 "
+                autoFocus={true}
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
-              <button className="cursor-pointer mr-7 ml-4 hover:scale-110" onClick={(e) => handleEditTaskDone(task.id)}>Done</button>
+              <button
+                className="p-1 cursor-pointer mr-7 ml-4 hover:scale-110"
+                onClick={(e) => handleEditTaskDone(task.id)}
+              >
+                Done
+              </button>
             </div>
           )}
           {task.id != isEditingID && (
             <div className="flex grow">
-            <div className="flex grow ml-4 mt-1 text-gray-700">{task.title}</div>
-          <button
-            className="p-1 cursor-pointer hover:scale-110"
-            onClick={(e) => handleEditTask(task.id, task.title)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-              />
-            </svg>
-          </button>
-          <button
-            className="text-green-700 p-1 cursor-pointer hover:scale-110"
-            onClick={(e) => handleTaskDone(task.id)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m4.5 12.75 6 6 9-13.5"
-              />
-            </svg>
-          </button>
+              <div className="flex grow ml-4 mt-1 text-gray-700">
+                {task.title}
+              </div>
+              <button
+                className="p-1 cursor-pointer hover:scale-110"
+                onClick={(e) => handleEditTask(task.id, task.title)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                  />
+                </svg>
+              </button>
+              <button
+                className="text-green-700 p-1 cursor-pointer hover:scale-110"
+                onClick={(e) => handleTaskDone(task.id)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                  />
+                </svg>
+              </button>
             </div>
           )}
         </div>
@@ -199,6 +214,7 @@ function App() {
   return (
     <>
       <div className="flex flex-row gap-4 items-center justify-center">
+        <button onClick={apiCall}>Make API Call</button>
         <div className=" flex flex-col items-center ">
           <div className="flex flex-col bg-slate-400 shadow-md/20 rounded-2xl p-2 m-2">
             <div className="pl-4 p-2 font-light text-white text-xl">
