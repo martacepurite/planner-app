@@ -1,22 +1,39 @@
 import { useState } from "react";
 
-
 function App() {
   const [index, setIndex] = useState(2);
   const [tasks, setTasks] = useState([
-    { id: 1, title: "do stuff", due_date: "", completed: false },
+    {
+      id: 1,
+      title: "do stuff",
+      due_date: "01.01.2027",
+      priority: "low",
+      completed: false,
+    },
   ]);
 
   const [newTask, setNewTask] = useState("");
+  const [newTaskDue, setNewTaskDue] = useState("01.01.2028");
+  const [newTaskPriority, setNewTaskPriority] = useState("");
+  const [isEditingID, setIsEditingID] = useState();
+  const [editTitle, setEditTitle] = useState("");
 
   function handleAddTask(e) {
     e.preventDefault();
     setTasks([
       ...tasks,
-      { id: index, title: newTask, due_date: "", completed: false },
+      {
+        id: index,
+        title: newTask,
+        due_date: newTaskDue,
+        priority: newTaskPriority,
+        completed: false,
+      },
     ]);
     setIndex(index + 1);
     setNewTask("");
+    setNewTaskDue("");
+    setNewTaskPriority("");
   }
 
   function handleRemoveTask(remove_id) {
@@ -35,27 +52,123 @@ function App() {
     );
   }
 
+  function handleEditTask(edit_id, edit_title, edit_date) {
+    setIsEditingID(edit_id);
+    setEditTitle(edit_title);
+  }
+
+  function handleEditTaskDone(edit_id) {
+    setIsEditingID("");
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === edit_id) {
+          return { ...task, title: editTitle };
+        } else {
+          return task;
+        }
+      })
+    );
+  }
   const listItems = tasks.map((task) => (
     <div
       key={task.id}
-      className="flex flex-row p-2 m-2 bg-slate-200 rounded-full"
+      className="flex flex-col w-md p-2 m-2 bg-slate-200 rounded-full"
     >
+      {task.priority === "high" && (
+        <div className="text-red-700 flex self-end mr-8">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+            />
+          </svg>
+        </div>
+      )}
+      {task.priority === "med" && (
+        <div className="text-amber-600 flex self-end mr-8">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+            />
+          </svg>
+        </div>
+      )}
+
       {task.completed && (
-        <div className="flex">
-          <div className="flex grow w-56 ml-4 mt-1 line-through">
-            {task.title}
-          </div>
+        <div className="flex flex-row">
+          <div className="flex grow ml-4 mt-1 line-through">{task.title}</div>
           <button
-            className="text-red-700 p-1 mr-4 cursor-pointer hover:scale-110"
+            className="flex text-red-700 p-1 mr-4 cursor-pointer hover:scale-110"
             onClick={(e) => handleRemoveTask(task.id)}
           >
-            X
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
           </button>
         </div>
       )}
       {!task.completed && (
         <div className="flex flex-row">
-          <div className="flex w-56 grow ml-4 mt-1">{task.title}</div>
+          {task.id === isEditingID && (
+            <div className="flex grow">
+              <input
+                className="flex grow ml-4 mt-1 border-b-1 "
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+              />
+              <button className="cursor-pointer mr-7 ml-4 hover:scale-110" onClick={(e) => handleEditTaskDone(task.id)}>Done</button>
+            </div>
+          )}
+          {task.id != isEditingID && (
+            <div className="flex grow">
+            <div className="flex grow ml-4 mt-1 text-gray-700">{task.title}</div>
+          <button
+            className="p-1 cursor-pointer hover:scale-110"
+            onClick={(e) => handleEditTask(task.id, task.title)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+              />
+            </svg>
+          </button>
           <button
             className="text-green-700 p-1 cursor-pointer hover:scale-110"
             onClick={(e) => handleTaskDone(task.id)}
@@ -75,37 +188,80 @@ function App() {
               />
             </svg>
           </button>
+            </div>
+          )}
         </div>
       )}
+      <div className="flex self-end mr-7">{task.due_date}</div>
     </div>
   ));
 
   return (
     <>
-      <div className=" flex flex-col items-center ">
-        <div className="flex flex-col bg-slate-400 shadow-md/20 rounded-2xl p-2 m-2">
-        <div className="pl-4 p-2 font-light text-white text-xl">My Tasks</div>
-          {listItems}
-        </div>
-        <form className="flex flex-row justify-center" onSubmit={handleAddTask}>
-          <label >
-            New task:{" "}
-            <input
-              className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-            />
-          <button
-            className="p-2 m-2 text-shadow-black text-shadow-md/10 text-3xl hover:scale-105 font-bold cursor-pointer"
-            type="submit"
+      <div className="flex flex-row gap-4 items-center justify-center">
+        <div className=" flex flex-col items-center ">
+          <div className="flex flex-col bg-slate-400 shadow-md/20 rounded-2xl p-2 m-2">
+            <div className="pl-4 p-2 font-light text-white text-xl">
+              My Tasks
+            </div>
+            {listItems}
+          </div>
+          <form
+            className="flex flex-col gap-2 justify-center items-end"
+            onSubmit={handleAddTask}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-</svg>
+            <label>
+              New task:{" "}
+              <input
+                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+              />
+            </label>
+            <label>
+              Due date:{" "}
+              <input
+                type="datetime-local"
+                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                value={newTaskDue}
+                onChange={(e) => setNewTaskDue(e.target.value)}
+              />
+            </label>
+            <label>
+              Priority:{" "}
+              <select
+                name="priority"
+                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                value={newTaskPriority}
+                onChange={(e) => setNewTaskPriority(e.target.value)}
+              >
+                <option value="low">Low</option>
+                <option value="med">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </label>
 
-          </button>
-          </label>
-        </form>
+            <button
+              className="p-2 m-2 text-shadow-black text-shadow-md/10 text-3xl hover:scale-105 font-bold cursor-pointer"
+              type="submit"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );
