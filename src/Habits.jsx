@@ -50,7 +50,6 @@ function Habits() {
 
     setCurrentStreaksID(currentStreaksID + 1);
     setCurrentDate(new Date(currentDate.valueOf() + 86400000));
-
   }
 
   function handleChangeCheck(id) {
@@ -68,31 +67,33 @@ function Habits() {
   const today = (
     <form
       onSubmit={handleDayDone}
-      className="flex flex-col bg-slate-200 p-5 rounded-2xl "
+      className="flex flex-col bg-slate-200 p-5 rounded-2xl shadow-md/20"
     >
       <div></div>
       {habits.map((hab) => (
         <div key={hab.id} className="flex flex-row pl-2 pr-2">
-          <label className="flex grow pr-2">{hab.title}</label>
+          <label className="flex grow pr-2 cursor-pointer">
+            <p className="flex grow pr-2" >{hab.title}</p>
           <input
             type="checkbox"
-            className="flex"
+            className="flex cursor-pointer"
             value={hab.title}
             checked={hab.done}
             onChange={() => handleChangeCheck(hab.id)}
             name={hab.title}
             id={hab.id}
           ></input>
+          </label>
         </div>
       ))}
-      <input type="submit" value="Done" />
+      <input className="mt-2 p-2 bg-green-300 rounded-full hover:scale-110 shadow-md/10 cursor-pointer" type="submit" value="Done" />
     </form>
   );
 
   return (
     <>
       <div className="flex items-center justify-center gap-4 p-5">
-        <div className="flex items-end bg-slate-200 p-5 m-2 pt-10 rounded-2xl">
+        <div className="flex items-end bg-slate-200 p-5 m-2 pt-10 shadow-md/20 rounded-2xl">
           <div className="flex flex-row items-end">
             <div className="flex flex-col pr-4">
               {habits.map((hab) => (
@@ -104,7 +105,7 @@ function Habits() {
             {streaks.map((day) => (
               <div key={day.id}>
                 <div className="flex flex-col grow items-center">
-                  <div className="flex border-2 p-1 -rotate-90 mb-8">
+                  <div className="flex border-1 p-1 -rotate-90 mb-8 rounded-full pr-2 pl-2">
                     <div className="flex">{day.date.getDate()}.</div>
                     <div className="flex">{day.date.getMonth() + 1}.</div>
                     <div className="flex">{day.date.getFullYear()}</div>
