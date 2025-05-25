@@ -4,16 +4,16 @@ function Habits() {
   const [habits, setHabits] = useState([
     { id: 1, title: "exercise", day_ids: [2, 3], done: false, streak: 2 },
     { id: 2, title: "walk", day_ids: [1, 3], done: false, streak: 1 },
-    { id: 3, title: "read", day_ids: [2], done: false, streak: 1 },
+    { id: 3, title: "read", day_ids: [2], done: false, streak: 0 },
     { id: 4, title: "clean", day_ids: [1, 2, 3], done: false, streak: 3 },
     { id: 5, title: "study", day_ids: [3], done: false, streak: 1 },
-    { id: 6, title: "meditate", day_ids: [1, 2], done: false, streak: 2 },
+    { id: 6, title: "meditate", day_ids: [1, 2], done: false, streak: 0 },
   ]);
 
   const [streaks, setStreaks] = useState([
-    { id: 1, date: new Date(1735945920000), habits_id: [1, 2, 4, 6] },
-    { id: 2, date: new Date(1735946920000), habits_id: [2, 3, 4, 6] },
-    { id: 3, date: new Date(1735947920000), habits_id: [1, 5, 4] },
+    { id: 1, date: new Date(1735949720000), habits_id: [1, 2, 4, 6] },
+    { id: 2, date: new Date(1736046920000), habits_id: [2, 3, 4, 6] },
+    { id: 3, date: new Date(1736147920000), habits_id: [1, 5, 4] },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date(Date.now()));
