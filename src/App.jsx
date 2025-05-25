@@ -1,27 +1,28 @@
 import { useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 
-const apiCall = () => {
-  axios.get("http://localhost:3000").then((data) => {
-    //this console.log will be in our frontend console
-    console.log(data);
-  });
-};
+//const apiCall = () => {
+  //axios.get("http://localhost:3000").then((data) => {
+    ////this console.log will be in our frontend console
+    //console.log(data);
+  //});
+//};
+
 function App() {
   const [index, setIndex] = useState(2);
   const [tasks, setTasks] = useState([
     {
       id: 1,
-      title: "do stuff",
-      due_date: new Date("01.01.2027"),
+      title: "Clean room",
+      due_date: new Date(Date.now()),
       priority: "low",
       completed: false,
     },
   ]);
 
   const [newTask, setNewTask] = useState("");
-  const [newTaskDue, setNewTaskDue] = useState(new Date("01.01.2027"));
-  const [newTaskPriority, setNewTaskPriority] = useState("Low");
+  const [newTaskDue, setNewTaskDue] = useState(new Date(Date.now().valueOf() + 84000000));
+  const [newTaskPriority, setNewTaskPriority] = useState("med");
   const [isEditingID, setIsEditingID] = useState();
   const [editTitle, setEditTitle] = useState("");
   const [editTime, setEditTime] = useState("");
@@ -88,7 +89,7 @@ function App() {
   const listItems = tasks.map((task) => (
     <div
       key={task.id}
-      className="flex flex-col w-md p-2 m-2 bg-slate-200 rounded-full"
+      className="flex flex-col w-md p-2 m-2 bg-slate-100 border-1 border-slate-400 rounded-full"
     >
       {task.priority === "high" && (
         <div className="text-red-700 flex self-end mr-8">
@@ -256,22 +257,24 @@ function App() {
   return (
     <>
       <div className="flex flex-row gap-4 items-center justify-center p-5">
+        {/* 
         <button onClick={apiCall}>Make API Call</button>
+        */}
         <div className=" flex flex-col items-center ">
-          <div className="flex flex-col bg-slate-400 shadow-md/20 rounded-2xl p-2 m-2">
-            <div className="pl-4 p-2 font-light text-white text-xl">
+          <div className="flex flex-col bg-slate-200 shadow-md/20 rounded-2xl p-2 m-2">
+            <div className="pl-4 p-2 font-light text-xl">
               My Tasks
             </div>
             {listItems}
           </div>
           <form
-            className="flex flex-col gap-2 justify-center items-end"
+            className="flex flex-col gap-2 justify-center items-end p-5 m-3 bg-slate-100 rounded-2xl shadow-md/20"
             onSubmit={handleAddTask}
           >
             <label>
               New task:{" "}
               <input
-                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                className="border-1 p-2 border-slate-400 bg-slate-50 shadow-md/10 rounded-full pl-3 ml-2"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
               />
@@ -280,7 +283,7 @@ function App() {
               Due date:{" "}
               <input
                 type="datetime-local"
-                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                className=" border-1 p-2 border-slate-400 bg-slate-50  shadow-md/10 rounded-full pl-3 ml-2"
                 value={newTaskDue}
                 onChange={(e) => setNewTaskDue(e.target.value)}
               />
@@ -289,7 +292,7 @@ function App() {
               Priority:{" "}
               <select
                 name="priority"
-                className="border-2 p-2 border-slate-400 shadow-md/10 rounded-full pl-3"
+                className="border-1 p-2 bg-slate-50 border-slate-400 shadow-md/10 rounded-full pl-3 ml-2"
                 value={newTaskPriority}
                 onChange={(e) => setNewTaskPriority(e.target.value)}
               >
@@ -300,7 +303,7 @@ function App() {
             </label>
 
             <button
-              className="p-2 m-2 text-shadow-black text-shadow-md/10 text-3xl hover:scale-105 font-bold cursor-pointer"
+              className="p-2 m-2 text-shadow-black bg-green-300 rounded-full text-shadow-md/10 text-3xl hover:scale-105 font-bold cursor-pointer"
               type="submit"
             >
               <svg

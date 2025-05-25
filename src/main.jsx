@@ -12,11 +12,13 @@ createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <MyAppNav />
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/habits" element={<Habits />} />
-      <Route path="/tasks" element={<App />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="planner-app">
+      <Route path="home" element={<Home />} />
+      <Route path="habits" element={<Habits />} />
+      <Route path="tasks" element={<App />} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      </Route>
     </Routes>
   </BrowserRouter>
 );

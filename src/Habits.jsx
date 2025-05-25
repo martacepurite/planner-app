@@ -2,12 +2,12 @@ import { useState } from "react";
 
 function Habits() {
   const [habits, setHabits] = useState([
-    { id: 1, title: "exercise", day_ids: [1, 3], done: false },
-    { id: 2, title: "walk", day_ids: [1, 3], done: false },
-    { id: 3, title: "read", day_ids: [2], done: false },
-    { id: 4, title: "clean", day_ids: [1, 2, 3], done: false },
-    { id: 5, title: "study", day_ids: [3], done: false },
-    { id: 6, title: "meditate", day_ids: [1, 2], done: false },
+    { id: 1, title: "exercise", day_ids: [2, 3], done: false, streak: 2 },
+    { id: 2, title: "walk", day_ids: [1, 3], done: false, streak: 1 },
+    { id: 3, title: "read", day_ids: [2], done: false, streak: 1 },
+    { id: 4, title: "clean", day_ids: [1, 2, 3], done: false, streak: 3 },
+    { id: 5, title: "study", day_ids: [3], done: false, streak: 1 },
+    { id: 6, title: "meditate", day_ids: [1, 2], done: false, streak: 2 },
   ]);
 
   const [streaks, setStreaks] = useState([
@@ -18,6 +18,7 @@ function Habits() {
 
   const [currentDate, setCurrentDate] = useState(new Date(Date.now()));
   const [currentStreaksID, setCurrentStreaksID] = useState(4);
+  const [currentHabitsID, setCurrentHabitsID] = useState(7);
 
   function handleDayDone(e) {
     e.preventDefault();
@@ -31,10 +32,14 @@ function Habits() {
         if (task.done === true) {
           return {
             ...task,
+            streak: task.streak + 1,
             day_ids: [...task.day_ids, currentStreaksID],
           };
         } else {
-          return task;
+          return {
+            ...task,
+            streak: 0,
+          };
         }
       })
     );
@@ -64,35 +69,108 @@ function Habits() {
     );
   }
 
+  const [newHabitTitle, setNewHabitTitle] = useState("");
+
+  function handleAddHabit(e) {
+    e.preventDefault();
+
+    setHabits([
+      ...habits,
+      {
+        id: currentHabitsID,
+        title: newHabitTitle,
+        day_ids: [],
+        done: false,
+        streak: 0,
+      },
+    ]);
+
+    setCurrentHabitsID(currentHabitsID + 1);
+  }
+
+
+  const streaktrack = (
+    <div className="flex flex-col gap-2 bg-slate-200 p-5 rounded-2xl shadow-md/20">
+      <div className="font-light flex self-center">
+
+      Streaks
+      </div>
+      {habits.map((hab) => (
+        <div key={hab.id} className="flex flex-row items-start pl-2 pr-2">
+            <p className="flex grow pr-4">{hab.title}</p>
+            {hab.streak > 0 && (
+              <div>
+            <p className="flex text-green-600">{hab.streak}</p>
+              </div>
+            )}
+            {hab.streak <= 0 && (
+              <div>
+            <p className="flex text-red-700">{hab.streak}</p>
+              </div>
+            )}
+        </div>
+      ))}
+    </div>
+  );
+
+  const addhabit = (
+    <form
+      onSubmit={handleAddHabit}
+      className="flex flex-row gap-2 bg-slate-200 p-5 rounded-2xl shadow-md/20"
+    >
+      <label>
+        <p className="pb-2 pl-2">New Habit:</p>
+        <input
+          className="bg-slate-100 p-3 pl-5 rounded-full flex"
+          type="text"
+          value={newHabitTitle}
+          onChange={(e) => setNewHabitTitle(e.target.value)}
+        ></input>
+      </label>
+      <input
+        className=" p-2 bg-green-300 rounded-full flex hover:scale-110 shadow-md/10 cursor-pointer"
+        type="submit"
+        value="Add new"
+      />
+    </form>
+  );
+
   const today = (
     <form
       onSubmit={handleDayDone}
       className="flex flex-col bg-slate-200 p-5 rounded-2xl shadow-md/20"
     >
-      <div></div>
+      <div className="font-light p-2">
+        {currentDate.toDateString()}
+      </div>
       {habits.map((hab) => (
         <div key={hab.id} className="flex flex-row pl-2 pr-2">
           <label className="flex grow pr-2 cursor-pointer">
-            <p className="flex grow pr-2" >{hab.title}</p>
-          <input
-            type="checkbox"
-            className="flex cursor-pointer"
-            value={hab.title}
-            checked={hab.done}
-            onChange={() => handleChangeCheck(hab.id)}
-            name={hab.title}
-            id={hab.id}
-          ></input>
+            <p className="flex grow pr-2">{hab.title}</p>
+            <input
+              type="checkbox"
+              className="flex cursor-pointer"
+              value={hab.title}
+              checked={hab.done}
+              onChange={() => handleChangeCheck(hab.id)}
+              name={hab.title}
+              id={hab.id}
+            ></input>
           </label>
         </div>
       ))}
-      <input className="mt-2 p-2 bg-green-300 rounded-full hover:scale-110 shadow-md/10 cursor-pointer" type="submit" value="Done" />
+      <input
+        className="mt-2 p-2 bg-green-300 rounded-full hover:scale-110 shadow-md/10 cursor-pointer"
+        type="submit"
+        value="Done"
+      />
     </form>
   );
 
   return (
     <>
       <div className="flex items-center justify-center gap-4 p-5">
+        {streaktrack}
         <div className="flex items-end bg-slate-200 p-5 m-2 pt-10 shadow-md/20 rounded-2xl">
           <div className="flex flex-row items-end">
             <div className="flex flex-col pr-4">
@@ -111,7 +189,7 @@ function Habits() {
                     <div className="flex">{day.date.getFullYear()}</div>
                   </div>
                   {habits.map((h) => (
-                    <div>
+                    <div key={h.id}>
                       {h.day_ids.includes(day.id) && (
                         <div className="text-green-600 font-bold">
                           <svg
@@ -155,7 +233,8 @@ function Habits() {
             ))}
           </div>
         </div>
-        {today}
+        <div>{today}</div>
+        <div>{addhabit}</div>
       </div>
     </>
   );
